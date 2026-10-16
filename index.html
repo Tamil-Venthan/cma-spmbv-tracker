@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMA Final P20A: SPMBV Complete BCCA Workbook Tracker (154 Sums)</title>
+<style>
+  :root {
+    --bg-dark: #0b1120;
+    --card-bg: #1e293b;
+    --card-hover: #334155;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.18);
+    --tier1: #ef4444;
+    --tier2: #f59e0b;
+    --tier3: #10b981;
+    --border: #334155;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+  body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.55; padding-bottom: 70px; }
+
+  header {
+    background: linear-gradient(135deg, #1e293b 0%, #0b1120 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  }
+  .container { max-width: 1460px; margin: 0 auto; }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; }
+  .title-group h1 { font-size: 1.45rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .title-group p { color: var(--text-muted); font-size: 0.86rem; margin-top: 3px; }
+  .badge-main { background: var(--accent-glow); color: var(--accent); border: 1px solid var(--accent); padding: 3px 10px; border-radius: 999px; font-size: 0.76rem; font-weight: 700; }
+
+  .top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .stat-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .stat-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .stat-info span { display: block; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-info strong { font-size: 1.2rem; color: #fff; }
+  .progress-bar-wrap { background: #0f172a; height: 9px; border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+  .progress-bar-fill { background: linear-gradient(90deg, #38bdf8, #10b981); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 24px;
+    max-width: 1460px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .filter-group { display: flex; flex-wrap: wrap; gap: 7px; }
+  .btn {
+    background: var(--card-bg);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 7px 13px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.18s;
+  }
+  .btn:hover { background: var(--card-hover); color: #fff; }
+  .btn.active { background: var(--accent); color: #0b1120; border-color: var(--accent); }
+  .btn-sort { background: rgba(129, 140, 248, 0.12); color: #a5b4fc; border-color: #6366f1; }
+  .btn-sort.active { background: #6366f1; color: #fff; }
+
+  .search-input {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    min-width: 270px;
+  }
+  .search-input:focus { outline: none; border-color: var(--accent); }
+
+  /* Theory Blueprint Panel */
+  .theory-panel {
+    max-width: 1412px;
+    margin: 0 auto 18px;
+    background: var(--card-bg);
+    border: 1px solid #6366f1;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: none;
+  }
+  .theory-panel.show { display: block; }
+  .theory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 12px; }
+  .theory-box { background: rgba(15, 23, 42, 0.65); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .theory-box h4 { color: var(--accent); font-size: 0.9rem; margin-bottom: 6px; }
+  .theory-box ul { padding-left: 18px; font-size: 0.82rem; color: #cbd5e1; }
+  .theory-box li { margin-bottom: 4px; }
+
+  /* Table */
+  .table-container { max-width: 1412px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th { background: rgba(15, 23, 42, 0.85); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.6px; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 0.88rem; vertical-align: middle; }
+  tr:hover { background: rgba(255, 255, 255, 0.025); }
+  tr.completed-row { opacity: 0.52; background: rgba(16, 185, 129, 0.06); }
+  tr.completed-row td.title-cell strong { text-decoration: line-through; color: var(--text-muted); }
+
+  .order-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 28px;
+    padding: 0 7px;
+    border-radius: 6px;
+    background: rgba(56, 189, 248, 0.14);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  .priority-pill {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.73rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .p-tier1 { background: rgba(239, 68, 68, 0.16); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.45); }
+  .p-tier2 { background: rgba(245, 158, 11, 0.16); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.45); }
+  .p-tier3 { background: rgba(16, 185, 129, 0.16); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.45); }
+
+  .pg-badge {
+    background: #0f172a;
+    color: #e2e8f0;
+    border: 1px solid #475569;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.81rem;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-block;
+  }
+  .exam-tag {
+    display: inline-block;
+    background: rgba(129, 140, 248, 0.16);
+    color: #a5b4fc;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .formula-hint {
+    display: block;
+    font-size: 0.79rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+  input[type="checkbox"] {
+    width: 19px;
+    height: 19px;
+    accent-color: #10b981;
+    cursor: pointer;
+  }
+  .empty-state { padding: 40px; text-align: center; color: var(--text-muted); }
+  @media (max-width: 950px) {
+    .table-container { overflow-x: auto; margin: 0 12px; }
+    .theory-panel { margin: 0 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="title-group">
+        <h1>📊 CMA Final P20A: SPMBV Master Workbook Tracker <span class="badge-main" id="visible-count-badge">154 Total Sums</span></h1>
+        <p>Brindavan College of Commerce and Arts (BCCA) Workbook • Every Sum Individually Mapped with PDF & WB Page Numbers</p>
+      </div>
+      <div class="top-actions">
+        <button class="btn btn-sort active" id="sort-ch-btn" onclick="setSort('chapter')">📚 Sort: Chapter-Wise (Q1 → End)</button>
+        <button class="btn btn-sort" id="sort-pri-btn" onclick="setSort('priority')">🔥 Sort: Exam Priority (#1 → #154)</button>
+        <button class="btn" onclick="toggleTheory()" style="border-color:#818cf8; color:#c7d2fe;">📖 Exam Theory Blueprint (Pg 2–6)</button>
+        <button class="btn" onclick="exportProgress()">💾 Backup</button>
+        <button class="btn" onclick="importProgress()">📂 Restore</button>
+        <button class="btn" onclick="resetProgress()" style="border-color:#ef4444; color:#fca5a5;">Reset</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card" onclick="setFilterByCard('all')">
+        <div class="stat-info"><span>Overall Progress</span><strong id="stat-total">0 / 154</strong></div>
+        <div class="order-badge" id="stat-pct">0%</div>
+      </div>
+      <div class="stat-card" onclick="setFilterByCard('Ch2')">
+        <div class="stat-info"><span>Ch 2: SPM Tools</span><strong id="stat-ch2">0 / 18</strong></div>
+        <span class="pg-badge">Pg 187–204</span>
+      </div>
+      <div class="stat-card" onclick="setFilterByCard('Ch3')">
+        <div class="stat-info"><span>Ch 3: Eco Efficiency</span><strong id="stat-ch3">0 / 11</strong></div>
+        <span class="pg-badge">Pg 7–13</span>
+      </div>
+      <div class="stat-card" onclick="setFilterByCard('Ch4')">
+        <div class="stat-info"><span>Ch 4: ERM (Z/M Score)</span><strong id="stat-ch4">0 / 17</strong></div>
+        <span class="pg-badge">Pg 14–33</span>
+      </div>
+      <div class="stat-card" onclick="setFilterByCard('Ch6')">
+        <div class="stat-info"><span>Ch 6: Val. Methods</span><strong id="stat-ch6">0 / 28</strong></div>
+        <span class="pg-badge">Pg 34–60</span>
+      </div>
+      <div class="stat-card" onclick="setFilterByCard('Ch7')">
+        <div class="stat-info"><span>Ch 7: Assets & EVA</span><strong id="stat-ch7">0 / 47</strong></div>
+        <span class="pg-badge">Pg 61–109</span>
+      </div>
+      <div class="stat-card" onclick="setFilterByCard('Ch8')">
+        <div class="stat-info"><span>Ch 8: M&A Valuation</span><strong id="stat-ch8">0 / 33</strong></div>
+        <span class="pg-badge">Pg 110–186</span>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="filter-group" id="view-filters">
+    <button class="btn active" data-filter="all" onclick="setFilter('all', this)">All Chapters (154)</button>
+    <button class="btn" data-filter="Ch2" onclick="setFilter('Ch2', this)">Ch 2: SPM Tools (18)</button>
+    <button class="btn" data-filter="Ch3" onclick="setFilter('Ch3', this)">Ch 3: Eco Efficiency (11)</button>
+    <button class="btn" data-filter="Ch4" onclick="setFilter('Ch4', this)">Ch 4: ERM (17)</button>
+    <button class="btn" data-filter="Ch6" onclick="setFilter('Ch6', this)">Ch 6: Valuation Methods (28)</button>
+    <button class="btn" data-filter="Ch7" onclick="setFilter('Ch7', this)">Ch 7: Assets, HR & EVA (47)</button>
+    <button class="btn" data-filter="Ch8" onclick="setFilter('Ch8', this)">Ch 8: M&A Valuation (33)</button>
+    <button class="btn" data-filter="Tier 1" onclick="setFilter('Tier 1', this)" style="border-color:#ef4444; color:#fca5a5;">🔥 Phase 1: Exam Sure-Shots (61)</button>
+    <button class="btn" data-filter="Tier 2" onclick="setFilter('Tier 2', this)" style="border-color:#f59e0b; color:#fcd34d;">⚡ Phase 2: Core Builders (48)</button>
+    <button class="btn" data-filter="Tier 3" onclick="setFilter('Tier 3', this)" style="border-color:#10b981; color:#6ee7b7;">💎 Phase 3: Mastery (45)</button>
+    <button class="btn" data-filter="pending" onclick="setFilter('pending', this)">⏳ Pending Only</button>
+  </div>
+  <input type="text" class="search-input" id="search-box" placeholder="Search Q.No, company, formula, or page..." oninput="renderTable()">
+</div>
+
+<div class="theory-panel" id="theory-panel">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h3 style="color:#fff; font-size:1.05rem;">📌 BCCA Past Paper & MQP Theory Blueprint (PDF Pages 2–6)</h3>
+    <button class="btn" onclick="toggleTheory()">Close ✕</button>
+  </div>
+  <div class="theory-grid">
+    <div class="theory-box">
+      <h4>Q2A: Chapter 1 Theory (7 Marks)</h4>
+      <ul>
+        <li><strong>SCM:</strong> Decision-making areas, 4 intrinsic flows & components (Dec 25, Dec 24 MQP 2, June 24 MQP 1).</li>
+        <li><strong>CRM:</strong> Types, fundamental aspects, impact, advantages & 5 misrepresentations (Dec 25 MQP 1, June 25 MQP 1&2, Dec 23).</li>
+        <li><strong>Decision Grid Analysis:</strong> Components & 4 segments (June 25 Exam).</li>
+        <li><strong>Order-to-Cash (O2C):</strong> Practices for optimization (Dec 24 Exam).</li>
+      </ul>
+    </div>
+    <div class="theory-box">
+      <h4>Q2B: Chapter 2 Theory (7 Marks)</h4>
+      <ul>
+        <li><strong>TQM vs. Six Sigma:</strong> Differences & TQM implementation steps (Dec 25, June 24, Dec 24 MQP 2).</li>
+        <li><strong>Balanced Scorecard (BSC):</strong> 4 Perspectives, steps & limitations (Dec 25 MQP 1, June 24, Dec 23 MQP 1).</li>
+        <li><strong>Benchmarking & Lean:</strong> Types/categories of Benchmarking (Dec 24, June 25 MQP 2); Lean & 5S (June 25 MQP 1).</li>
+        <li><strong>Productivity & MIS:</strong> Performance vs Productivity vs Efficiency (June 25); MIS reports (Dec 23).</li>
+      </ul>
+    </div>
+    <div class="theory-box">
+      <h4>Q3B: Chapter 4 ERM Theory (7 Marks)</h4>
+      <ul>
+        <li><strong>ERM & COSO Framework:</strong> Essentials, objectives, need & COSO components (Dec 25, Dec 23, June 25 MQP 1).</li>
+        <li><strong>REPM:</strong> Risk-Enabled Performance Management & transformation (June 25 Exam, Dec 25 MQP 1).</li>
+        <li><strong>Risk Tools:</strong> Risk Mapping (June 25 MQP 2), Risk Retention (Dec 24 Exam), VaR advantages/limitations (June 24 Exam).</li>
+      </ul>
+    </div>
+    <div class="theory-box">
+      <h4>Q8A: Financial Statement / CPA Analysis (7 Marks)</h4>
+      <ul>
+        <li><strong>Customer Profitability Analysis (CPA):</strong> Dec 25 Exam.</li>
+        <li><strong>Common-Size & Comparative Statements:</strong> Common-size B/S & Income Statement reconstruction (June 25, Dec 25 MQP 1&2).</li>
+        <li><strong>Critical Success Factors (CSF) & Incremental CF:</strong> June 24 Exam, Dec 24 Exam.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:48px;">Done</th>
+        <th style="width:90px;">Seq / Rank</th>
+        <th style="width:145px;">Chapter & Q.No</th>
+        <th style="width:145px;">Practice Phase</th>
+        <th>Company / Problem Title & Standard Formula Focus</th>
+        <th style="width:130px;">PDF Page</th>
+        <th style="width:110px;">WB Page</th>
+      </tr>
+    </thead>
+    <tbody id="sums-tbody"></tbody>
+  </table>
+</div>
+
+<script>
+const sumsData = [
+  // ==================== CHAPTER 2: SPM TOOLS (18 SUMS | PDF PG 187-204) ====================
+  { id: "ch2-1", ch: "Ch2", chSeq: 1, priOrder: 10, tier: "Tier 1", chName: "Ch 2: SPM Tools", qno: "Q-1", title: "5-Component DuPont Analysis — Formula & Component Breakdown", formula: "ROE = (EAT/EBT) × (EBT/EBIT) × (EBIT/Sales) × (Sales/Assets) × (Assets/Equity)", exam: "Dec 25 MQP 1, Dec 24 MQP 2, Dec 23 MQP 1", pdfPg: "Pg 187–188", wbPg: "8.1–8.2" },
+  { id: "ch2-2", ch: "Ch2", chSeq: 2, priOrder: 66, tier: "Tier 2", chName: "Ch 2: SPM Tools", qno: "Q-2", title: "Sulekha Ltd. & Krishna LLP — Full 5-Component DuPont Numerical", formula: "EBIT/Sales (36.2%) × EBT/EBIT (0.99) × EAT/EBT (64.7%) × ATR (0.98) × EM (1.77) = 40.24%", exam: "Core 5-Step Numerical", pdfPg: "Pg 188–189", wbPg: "8.2–8.3" },
+  { id: "ch2-3", ch: "Ch2", chSeq: 3, priOrder: 11, tier: "Tier 1", chName: "Ch 2: SPM Tools", qno: "Q-3", title: "Ruhi Ltd., Jammu — 3-Step DuPont ROE vs Industry Benchmark (25% & 40%)", formula: "ROE = Net Profit Margin (5.95%) × Asset Turnover (4.40) × (1 + D/E 0.38) = 36.13%", exam: "June 24 Exam (4A)", pdfPg: "Pg 189–190", wbPg: "8.3–8.4" },
+  { id: "ch2-4", ch: "Ch2", chSeq: 4, priOrder: 13, tier: "Tier 1", chName: "Ch 2: SPM Tools", qno: "Q-4", title: "Surya Textiles Ltd. (2019–2022) — 4-Year Extended DuPont Trend", formula: "Decompose ROE across 4 years into PAT/Sales, Sales/Assets & Assets/Equity", exam: "Dec 23 Exam (4A), J23", pdfPg: "Pg 190–191", wbPg: "8.4–8.5" },
+  { id: "ch2-5", ch: "Ch2", chSeq: 5, priOrder: 12, tier: "Tier 1", chName: "Ch 2: SPM Tools", qno: "Q-5", title: "Retailer A vs Retailer B (Mrs. EuCheu) — Identical 45% ROE Comparison", formula: "Retailer A (30% × 0.5 × 3 = 45% High Leverage) vs Retailer B (15% × 3 × 1 = 45% Zero Debt)", exam: "June 25 MQP 1, June 24 MQP 1", pdfPg: "Pg 191–192", wbPg: "8.5–8.6" },
+  { id: "ch2-6", ch: "Ch2", chSeq: 6, priOrder: 67, tier: "Tier 2", chName: "Ch 2: SPM Tools", qno: "Q-6", title: "River Ltd. (2021 vs 2022) — Reverse DuPont Derivation (ROA & Margin)", formula: "ROA = ROE / Equity Multiplier; Profit Margin = ROA / Asset Turnover", exam: "Core Analytical Sum", pdfPg: "Pg 192–193", wbPg: "8.6–8.7" },
+  { id: "ch2-7", ch: "Ch2", chSeq: 7, priOrder: 14, tier: "Tier 1", chName: "Ch 2: SPM Tools", qno: "Q-7", title: "Lotus Ltd. (2020–2023) — DuPont ROA, ROE & P/E vs P/B Residual Earnings", formula: "Compare Asset vs Revenue/Equity YoY growth rates; Residual Earnings & Abnormal Growth", exam: "Dec 24 Exam (4A)", pdfPg: "Pg 193–194", wbPg: "8.7–8.8" },
+  { id: "ch2-8", ch: "Ch2", chSeq: 8, priOrder: 15, tier: "Tier 1", chName: "Ch 2: SPM Tools", qno: "Q-8", title: "Global Generic Pharma Co. (2023–2024) — 2-Year DuPont Evaluation", formula: "ROE rises 14.88% -> 16.98% via Margin & Leverage despite drop in Asset Turnover", exam: "June 25 MQP 2, J18, D22", pdfPg: "Pg 194–196", wbPg: "8.8–8.10" },
+  { id: "ch2-9", ch: "Ch2", chSeq: 9, priOrder: 16, tier: "Tier 1", chName: "Ch 2: SPM Tools", qno: "Q-9", title: "JKL Ltd. (2024–25) — 7 Comprehensive Financial Ratios", formula: "ROCE (18.35%), ATR (1.32), CR (1.61), ITR (3.97), Capital Gearing (0.96), DCR (8.5x), P/E (11.2x)", exam: "June 25 Exam (4A)", pdfPg: "Pg 196–199", wbPg: "8.10–8.13" },
+  { id: "ch2-10", ch: "Ch2", chSeq: 10, priOrder: 17, tier: "Tier 1", chName: "Ch 2: SPM Tools", qno: "Q-10", title: "Return on Net Assets (RONA) — Formula & Capital-Intensive Implications", formula: "RONA = Net Profit / (Fixed Assets + Net Working Capital)", exam: "Dec 25 Exam, Dec 25 MQP 2, Dec 24 MQP 1", pdfPg: "Pg 199", wbPg: "8.13" },
+  { id: "ch2-11", ch: "Ch2", chSeq: 11, priOrder: 68, tier: "Tier 2", chName: "Ch 2: SPM Tools", qno: "Q-11", title: "Bearing Housings Process (10 Samples of 100) — Statistical p-Chart & C-Chart", formula: "p̄ = 0.038; UCL/LCL = p̄ ± 3√[p̄(1-p̄)/100] -> UCL = 0.095, LCL = 0", exam: "Core SPC Sum", pdfPg: "Pg 199–200", wbPg: "8.13–8.14" },
+  { id: "ch2-12", ch: "Ch2", chSeq: 12, priOrder: 69, tier: "Tier 2", chName: "Ch 2: SPM Tools", qno: "Q-12", title: "Hotel Weekly Customer Complaints — Poisson c-Chart Control Limits", formula: "c̄ = 22/10 = 2.2; UCL = c̄ + 3√c̄ = 6.65; LCL = max(0, c̄ - 3√c̄) = 0", exam: "SMQ-2", pdfPg: "Pg 200–201", wbPg: "8.14–8.15" },
+  { id: "ch2-13", ch: "Ch2", chSeq: 13, priOrder: 70, tier: "Tier 2", chName: "Ch 2: SPM Tools", qno: "Q-13", title: "BCCA Ltd. Quality Manager — Deriving p-Chart Limits from np-Chart", formula: "Divide np-Chart LCL (108.629) & UCL (165.371) by n=400 -> LCL=0.272, UCL=0.413", exam: "June 23 Exam", pdfPg: "Pg 201", wbPg: "8.15" },
+  { id: "ch2-14", ch: "Ch2", chSeq: 14, priOrder: 114, tier: "Tier 3", chName: "Ch 2: SPM Tools", qno: "Q-14", title: "Bearing Housings p-Chart — Duplicate Drill of Q-11", formula: "Same as Q-11 (UCL = 0.095, CL = 0.038, LCL = 0)", exam: "SMQ-1", pdfPg: "Pg 201", wbPg: "8.15" },
+  { id: "ch2-15", ch: "Ch2", chSeq: 15, priOrder: 115, tier: "Tier 3", chName: "Ch 2: SPM Tools", qno: "Q-15", title: "Ball Bearings (8mm Diameter) — Variable X-Bar Control Chart (3-Sigma)", formula: "SE = σ/√n = 0.01/√5 = 0.00447; UCL = 8.0134, LCL = 7.9866 (3 samples out of control)", exam: "Dec 18 Exam", pdfPg: "Pg 202", wbPg: "8.16" },
+  { id: "ch2-16", ch: "Ch2", chSeq: 16, priOrder: 116, tier: "Tier 3", chName: "Ch 2: SPM Tools", qno: "Q-16", title: "Suppliers X Ltd. (3% def) vs Y Ltd. (5% def) — Inspection Justification & Supplier Choice", formula: "Compare cost per 100 good units without inspection (X: ₹191.13) vs with inspection (Y: ₹201.13)", exam: "Advanced COQ Sum", pdfPg: "Pg 202–203", wbPg: "8.16–8.17" },
+  { id: "ch2-17", ch: "Ch2", chSeq: 17, priOrder: 71, tier: "Tier 2", chName: "Ch 2: SPM Tools", qno: "Q-17", title: "BCCA Ltd. (₹3,000 Sales) — Cost of Quality (COQ) 4-Way Classification", formula: "Prevention, Appraisal, Internal Failure & External Failure % to Sales (29.25% -> 21.67%)", exam: "Dec 21 Exam", pdfPg: "Pg 203–204", wbPg: "8.17–8.18" },
+  { id: "ch2-18", ch: "Ch2", chSeq: 18, priOrder: 117, tier: "Tier 3", chName: "Ch 2: SPM Tools", qno: "Q-18", title: "A Ltd. Quality Improvement (₹60L Sales) — Scaled COQ Variant of Q-17", formula: "COQ drops 7.58% of ₹60L sales -> Profit increases by ₹4,54,800", exam: "Additional COQ Drill", pdfPg: "Pg 204", wbPg: "8.18" },
+
+  // ==================== CHAPTER 3: ECONOMIC EFFICIENCY (11 SUMS | PDF PG 7-13) ====================
+  { id: "ch3-1", ch: "Ch3", chSeq: 1, priOrder: 72, tier: "Tier 2", chName: "Ch 3: Eco Efficiency", qno: "Sum 1", title: "Mumbai Departmental Store Men's Ties — Linear Demand D = 120 - 5P", formula: "At P=20, D=20; For D=40, P=₹16; Highest Price at D=1 -> P=₹23.80", exam: "Dec 19 Exam", pdfPg: "Pg 7", wbPg: "Ch3 Pg 1" },
+  { id: "ch3-2", ch: "Ch3", chSeq: 2, priOrder: 118, tier: "Tier 3", chName: "Ch 3: Eco Efficiency", qno: "Sum 2", title: "Cost Function C = 4x³ + 9x² + 11x + 27 — AC, MC, AVC & AFC", formula: "AC = 4x²+9x+11+27/x; MC = 12x²+18x+11; AVC = 4x²+9x+11; AFC = 27/x", exam: "Basic Calculus Warm-up", pdfPg: "Pg 7", wbPg: "Ch3 Pg 1" },
+  { id: "ch3-3", ch: "Ch3", chSeq: 3, priOrder: 119, tier: "Tier 3", chName: "Ch 3: Eco Efficiency", qno: "Sum 3", title: "Average Cost AC = x³ + 12x² - 11x — Total Cost & Marginal Cost", formula: "TC = x⁴ + 12x³ - 11x²; MC = d(TC)/dx = 4x³ + 36x² - 22x", exam: "Basic Calculus Warm-up", pdfPg: "Pg 7–8", wbPg: "Ch3 Pg 1–2" },
+  { id: "ch3-4", ch: "Ch3", chSeq: 4, priOrder: 73, tier: "Tier 2", chName: "Ch 3: Eco Efficiency", qno: "Sum 4", title: "Firm Cost C = x³ - 4x² + 7x — Output for Minimum Average Cost", formula: "AC = x² - 4x + 7; d(AC)/dx = 2x - 4 = 0 -> x = 2, Min AC = 3", exam: "Core Calculus Sum", pdfPg: "Pg 8", wbPg: "Ch3 Pg 2" },
+  { id: "ch3-5", ch: "Ch3", chSeq: 5, priOrder: 74, tier: "Tier 2", chName: "Ch 3: Eco Efficiency", qno: "Sum 5", title: "Commodity AC = 2x - 1 + 50/x — Increasing/Decreasing AC Range & MC", formula: "d(AC)/dx = 2 - 50/x² = 0 -> x = 5 (Increasing x>5, Decreasing x<5); MC = 4x - 1", exam: "Core Calculus Sum", pdfPg: "Pg 8", wbPg: "Ch3 Pg 2" },
+  { id: "ch3-6", ch: "Ch3", chSeq: 6, priOrder: 120, tier: "Tier 3", chName: "Ch 3: Eco Efficiency", qno: "Sum 6", title: "Commodity Cost C = q³ - 4q² + 6q — Minimum Average Variable Cost", formula: "AVC = q² - 4q + 6; d(AVC)/dq = 2q - 4 = 0 -> q = 2", exam: "Variant of Sum 4", pdfPg: "Pg 9", wbPg: "Ch3 Pg 3" },
+  { id: "ch3-7", ch: "Ch3", chSeq: 7, priOrder: 18, tier: "Tier 1", chName: "Ch 3: Eco Efficiency", qno: "Sum 7", title: "Firm Cost C = 300x - 10x² + (1/3)x³ — Min MC, Min AC & MC = AC", formula: "Min MC at x=10; Min AC at x=15; MC = AC verified at x=15", exam: "Dec 24 Exam (3A), MTP J20", pdfPg: "Pg 9–10", wbPg: "Ch3 Pg 3–4" },
+  { id: "ch3-8", ch: "Ch3", chSeq: 8, priOrder: 121, tier: "Tier 3", chName: "Ch 3: Eco Efficiency", qno: "Sum 8", title: "Given C(x) & R(x) Polynomials — Total Profit & Marginal Profit", formula: "Profit P = R - C; Marginal Profit = dP/dx", exam: "Basic Warm-up", pdfPg: "Pg 10", wbPg: "Ch3 Pg 4" },
+  { id: "ch3-9", ch: "Ch3", chSeq: 9, priOrder: 20, tier: "Tier 1", chName: "Ch 3: Eco Efficiency", qno: "Sum 9", title: "Manufacturer Price P = (330 - x) — Profit Maximization Output", formula: "Profit = 320x - 2x² - 12; dP/dx = 320 - 4x = 0 -> x = 80 units, Max Profit = ₹12,788", exam: "Past Paper D17, J19 (MQP Model)", pdfPg: "Pg 10–11", wbPg: "Ch3 Pg 4–5" },
+  { id: "ch3-10", ch: "Ch3", chSeq: 10, priOrder: 19, tier: "Tier 1", chName: "Ch 3: Eco Efficiency", qno: "Sum 10", title: "Firm Cost C = (1/3)x³ - 5x² + 75x + 10 — Minimum Marginal Cost", formula: "MC = x² - 10x + 75; d(MC)/dx = 2x - 10 = 0 -> x = 5, Min MC = 50", exam: "June 24 MQP 1 (3A), J17", pdfPg: "Pg 11", wbPg: "Ch3 Pg 5" },
+  { id: "ch3-11", ch: "Ch3", chSeq: 11, priOrder: 75, tier: "Tier 2", chName: "Ch 3: Eco Efficiency", qno: "Sum 11", title: "Comprehensive 8-Part Cost & Revenue Analysis (Parts a to h)", formula: "C = x³/10 + 200x, R = (2200x - 3x²)/2; Max Profit = ₹28,750 at x = 50 where MR = MC = 950", exam: "Mastery Problem", pdfPg: "Pg 11–13", wbPg: "Ch3 Pg 5–7" },
+
+  // ==================== CHAPTER 4: ENTERPRISE RISK MANAGEMENT (17 SUMS | PDF PG 14-33) ====================
+  { id: "ch4-1", ch: "Ch4", chSeq: 1, priOrder: 1, tier: "Tier 1", chName: "Ch 4: ERM", qno: "Q-1", title: "Fin Poor Ltd. / Stress Ltd. — NCAER Corporate Distress Model", formula: "Cash Profit = -19.10Cr, NWC = -1,261.41Cr, Net Worth = -206.19Cr -> Fully Sick", exam: "June 24 Exam (4B), J17", pdfPg: "Pg 14–15", wbPg: "4.1–4.2" },
+  { id: "ch4-2", ch: "Ch4", chSeq: 2, priOrder: 2, tier: "Tier 1", chName: "Ch 4: ERM", qno: "Q-2", title: "Q Ltd. — NCAER Corporate Sickness Prediction", formula: "Cash Profit = -16Cr, NWC = -20.80Cr, Net Worth = -19.20Cr -> Fully Sick", exam: "June 24 MQP 1, J23", pdfPg: "Pg 16", wbPg: "4.3" },
+  { id: "ch4-3", ch: "Ch4", chSeq: 3, priOrder: 3, tier: "Tier 1", chName: "Ch 4: ERM", qno: "Q-3", title: "Unfortunate Ltd. — Altman Z-Score (1968 Model Direct Ratios)", formula: "Z = 1.2(0.45) + 1.4(0.25) + 3.3(0.30) + 0.6(2.50) + 1.0(3) = 6.38 (> 2.99 Safe)", exam: "Dec 23 Exam", pdfPg: "Pg 16–17", wbPg: "4.3–4.4" },
+  { id: "ch4-4", ch: "Ch4", chSeq: 4, priOrder: 4, tier: "Tier 1", chName: "Ch 4: ERM", qno: "Q-4", title: "S & Co. Ltd. — Altman Z-Score (1968 Model with % Ratios)", formula: "Z = 1.2(0.25) + 1.4(0.30) + 3.3(0.15) + 0.6(1.50) + 1.0(2) = 4.115 (> 2.99 Safe)", exam: "Dec 24 MQP 2, Dec 23 MQP", pdfPg: "Pg 17", wbPg: "4.4" },
+  { id: "ch4-5", ch: "Ch4", chSeq: 5, priOrder: 62, tier: "Tier 2", chName: "Ch 4: ERM", qno: "Q-5", title: "Company with Equity & Preference Shares — Altman Z-Score (1968)", formula: "Deduct ₹25k Fictitious Assets from RE & Total Assets; include MV of Pref in X4 -> Z = 4.41", exam: "Core Concept Sum", pdfPg: "Pg 18–19", wbPg: "4.5–4.6" },
+  { id: "ch4-6", ch: "Ch4", chSeq: 6, priOrder: 5, tier: "Tier 1", chName: "Ch 4: ERM", qno: "Q-6", title: "Vedisha Ltd. — Altman Z-Score from Full Ind AS Balance Sheet", formula: "WC=680, TA=2765, RE=1250, EBIT=585, MV Eq=800, Debt=1015, Sales=3050 -> Z = 3.2034", exam: "June 25 MQP 2, D19", pdfPg: "Pg 19–20", wbPg: "4.6–4.7" },
+  { id: "ch4-7", ch: "Ch4", chSeq: 7, priOrder: 6, tier: "Tier 1", chName: "Ch 4: ERM", qno: "Q-7", title: "Balance Sheet Extract — Altman Z-Score (Grey Area Case)", formula: "Sales = 1.40L / 20% = 7L; Z = 2.36 (Lies between 1.81 and 2.99 -> Grey Zone)", exam: "Dec 23 Exam", pdfPg: "Pg 20–22", wbPg: "4.7–4.9" },
+  { id: "ch4-8", ch: "Ch4", chSeq: 8, priOrder: 63, tier: "Tier 2", chName: "Ch 4: ERM", qno: "Q-8", title: "Reverse EBIT & Market Cap Derivation — Altman Z-Score (1968)", formula: "DPS ₹20 / 50% Payout -> EPS ₹40 -> PAT 1.6L -> EBT 3.2L -> EBIT 3.76L; Neg WC -> Z = 3.63", exam: "Dec 23 (Variant), J17", pdfPg: "Pg 22–23", wbPg: "4.9–4.10" },
+  { id: "ch4-9", ch: "Ch4", chSeq: 9, priOrder: 7, tier: "Tier 1", chName: "Ch 4: ERM", qno: "Q-9", title: "Lotus Inc. vs Woodex Inc. (Mr. Hajime) — 2-Company Bond Safety Comparison", formula: "Z(Lotus) = 6.4738 vs Z(Woodex) = 7.32125 -> Woodex Inc. is safer", exam: "Dec 25 Exam, D25 MQP2, D24 MQP1", pdfPg: "Pg 23–25", wbPg: "4.10–4.12" },
+  { id: "ch4-10", ch: "Ch4", chSeq: 10, priOrder: 110, tier: "Tier 3", chName: "Ch 4: ERM", qno: "Q-9A", title: "RIL vs SIL (Mr. Gopal) — 2-Company Altman Z-Score Comparison", formula: "Identical numbers to Q-9 (Z = 6.4738 vs 7.32125 -> SIL is safer)", exam: "Dec 25 Exam", pdfPg: "Pg 25", wbPg: "4.12" },
+  { id: "ch4-11", ch: "Ch4", chSeq: 11, priOrder: 8, tier: "Tier 1", chName: "Ch 4: ERM", qno: "Q-10", title: "Y-Connection (2020–2024) — 5-Year Altman Z-Score Trend Interpretation", formula: "Analyze X1..X5 individually; Z improves from 1.840 to 2.490 within Grey Zone", exam: "June 25 Exam, Dec 25 MQP 1", pdfPg: "Pg 25–27", wbPg: "4.12–4.14" },
+  { id: "ch4-12", ch: "Ch4", chSeq: 12, priOrder: 64, tier: "Tier 2", chName: "Ch 4: ERM", qno: "Q-11", title: "S & Co. Ltd. (Book Value of Equity) — Altman 1983 Revised Z-Score", formula: "Z = 0.717X1 + 0.847X2 + 3.107X3 + 0.420X4 + 0.998X5 = 4.88 (> 2.90 Safe)", exam: "Dec 17 Exam", pdfPg: "Pg 27", wbPg: "4.14" },
+  { id: "ch4-13", ch: "Ch4", chSeq: 13, priOrder: 111, tier: "Tier 3", chName: "Ch 4: ERM", qno: "Q-12", title: "XYZ Limited (Large Ind AS B/S) — Revised Z-Score (1983 Model)", formula: "Sales = 21,640 / 16.25% = 1,33,169.23Cr; Revised Z = 3.077", exam: "Dec 18 Exam", pdfPg: "Pg 27–29", wbPg: "4.14–4.16" },
+  { id: "ch4-14", ch: "Ch4", chSeq: 14, priOrder: 9, tier: "Tier 1", chName: "Ch 4: ERM", qno: "Q-13", title: "Fairy Tale Co. Ltd. (Maharashtra Credit Bank) — Beneish M-Score", formula: "M = -4.84 + Σ(Coeff × Index) = -4.84 + 2.411 = -2.429 (< -2.22 Not Manipulating)", exam: "Dec 24 Exam, June 25 MQP 1", pdfPg: "Pg 29–30", wbPg: "4.16–4.17" },
+  { id: "ch4-15", ch: "Ch4", chSeq: 15, priOrder: 112, tier: "Tier 3", chName: "Ch 4: ERM", qno: "Q-14", title: "Pelikan Inc. (Mari Asai) — Beneish M-Score with 8 Sub-Formulas", formula: "M = -4.84 + 2.1182 = -2.7218 (< -2.22 Safe to invest in corporate debt)", exam: "Additional Practice", pdfPg: "Pg 30–32", wbPg: "4.17–4.19" },
+  { id: "ch4-16", ch: "Ch4", chSeq: 16, priOrder: 65, tier: "Tier 2", chName: "Ch 4: ERM", qno: "Q-15", title: "M/s XYZ Bank — Basel Capital Adequacy Ratio (Tier I & Tier II)", formula: "Capital Fund = ₹1,790Cr; Total RWA = 12,000 + 5,000 = ₹17,000Cr -> CAR = 10.53%", exam: "June 23 Exam", pdfPg: "Pg 32–33", wbPg: "4.19–4.20" },
+  { id: "ch4-17", ch: "Ch4", chSeq: 17, priOrder: 113, tier: "Tier 3", chName: "Ch 4: ERM", qno: "Q-16", title: "XYZ Bank — CAR from Asset Risk Weights (Debentures 90%, Mortgage 75%)", formula: "RWA = 8,100 + 33,750 + 0 = 41,850; CAR = (3000+1000)/41,850 = 9.78%", exam: "Additional Practice", pdfPg: "Pg 33", wbPg: "4.20" },
+
+  // ==================== CHAPTER 6: VALUATION METHODS & APPROACHES (28 SUMS | PDF PG 34-60) ====================
+  { id: "ch6-1", ch: "Ch6", chSeq: 1, priOrder: 21, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-1", title: "Fascino Industry & Reliable Ltd. — 5-Year DCF Acquisition Decision", formula: "PV of Cash Flows @ 9% WACC = ₹74,45,175 > ₹50,00,000 Asking Price -> Recommend", exam: "Dec 23 Exam (8M), D18", pdfPg: "Pg 34", wbPg: "6.1" },
+  { id: "ch6-2", ch: "Ch6", chSeq: 2, priOrder: 22, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-2", title: "Super Shakti & Beta India Ltd. — 2-Stage DCF with Negative Yr 1 CF", formula: "Explicit PV @ 15% (20.185L) + PV of Terminal Value [21/(0.08-0.05) ÷ 1.15^5 = 348.08L] = ₹368.265L", exam: "Dec 22 Exam, D17", pdfPg: "Pg 34–35", wbPg: "6.1–6.2" },
+  { id: "ch6-3", ch: "Ch6", chSeq: 3, priOrder: 23, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-3", title: "Suvi Sion Ltd. — 2-Step Growth FCFE Model (35% for 5 Yrs, 5% Stable)", formula: "PV of 5-yr FCFE @ 18% (₹30.50L) + PV of Terminal Value @ 12% Ke (₹117.58L) = ₹148.08L", exam: "Dec 25 MQP 1 (5A), June 24 MQP 1", pdfPg: "Pg 35", wbPg: "6.2" },
+  { id: "ch6-4", ch: "Ch6", chSeq: 4, priOrder: 76, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-4", title: "Sales ₹1,00,000 Extract — Step-by-Step FCFF and FCFE Computation", formula: "FCFF = NOPAT(3250) + Dep(20k) - ΔNWC(1k) - CapEx(10k) = ₹12,250; FCFE = 12,250 - 650 + 5,000 = ₹16,600", exam: "MQP J23", pdfPg: "Pg 36", wbPg: "6.3" },
+  { id: "ch6-5", ch: "Ch6", chSeq: 5, priOrder: 24, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-5", title: "ABC Ltd. — Constant Growth FCFF vs FCFE Valuation", formula: "VF = 170(1.07)/(0.13-0.07) = ₹3,031.67Cr (Eq = ₹1,531.67Cr); Direct FCFE Eq = 130(1.075)/(0.15-0.075) = ₹1,863.33Cr", exam: "Dec 24 MQP 2 (5A)", pdfPg: "Pg 36–37", wbPg: "6.3–6.4" },
+  { id: "ch6-6", ch: "Ch6", chSeq: 6, priOrder: 77, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-6", title: "Winne Ltd. — 3-Year High Growth (20%) + Terminal FCFF Valuation", formula: "Explicit PV @ 15% (₹3,676.44Cr) + PV of Terminal Value (₹25,174.08Cr) = ₹28,850.52Cr", exam: "Core FCFF Table Sum", pdfPg: "Pg 37–38", wbPg: "6.4–6.5" },
+  { id: "ch6-7", ch: "Ch6", chSeq: 7, priOrder: 25, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-7", title: "Laxmi Electronics ('Raghu TV') — Earnings Capitalisation & MPS", formula: "Existing PAT ex-extraordinary (78.4L) + New Product PAT (19.6L) = FMP ₹98L / 14% = ₹700L; MPS = ₹47", exam: "June 25 Exam (5B), June 24 Exam (5B)", pdfPg: "Pg 38–39", wbPg: "6.5–6.6" },
+  { id: "ch6-8", ch: "Ch6", chSeq: 8, priOrder: 26, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-7A", title: "Encore Electric Ltd. — FMP Capitalisation with 13% Preference Dividend", formula: "FMP = ₹98L -> Value = ₹700L; Equity Earnings = 98L - 13L = 85L -> EPS ₹1.70 × 10 = ₹17", exam: "Dec 25 MQP 1 (5B)", pdfPg: "Pg 39–40", wbPg: "6.6–6.7" },
+  { id: "ch6-9", ch: "Ch6", chSeq: 9, priOrder: 27, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-8", title: "XYZ Pvt. Ltd. (Retail Angel Pitch) — EV/EBITDA Multiple & 3-Yr DCF", formula: "Adj EBITDA = 90-10-20 = 60Cr -> EV = 300Cr; CAPM Ke=15.8%, WACC=12.84% -> DCF = ₹289Cr", exam: "Dec 23 MQP 1 (5B), J18", pdfPg: "Pg 40–41", wbPg: "6.7–6.8" },
+  { id: "ch6-10", ch: "Ch6", chSeq: 10, priOrder: 78, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-9", title: "Nawkiran Ltd. — 8-Year Discounted PAT/CFAT vs Capitalisation", formula: "8-yr PV(PAT)=737.25L, PV(CFAT)=884.77L; Cap(PAT)=900L, Cap(CFAT)=1125L; Avg = ₹911.75L", exam: "Multi-Method Sum", pdfPg: "Pg 41–42", wbPg: "6.8–6.9" },
+  { id: "ch6-11", ch: "Ch6", chSeq: 11, priOrder: 28, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-10", title: "Vinayak Ltd. & Vedant Ltd. — Weighted Trading Cash Flow Valuation", formula: "Op CF +/- WC changes - ₹15k Fixed Asset allowance; Weights 25:35:40 -> ₹4,030 / 10% = ₹40,300", exam: "June 25 MQP 2 (5B), J17", pdfPg: "Pg 42–44", wbPg: "6.9–6.11" },
+  { id: "ch6-12", ch: "Ch6", chSeq: 12, priOrder: 79, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-11", title: "Aditya (ABC Corp: RIL & M&M) — 10-Day VWAP Portfolio Valuation", formula: "VWAP = ΣTurnover / ΣShares -> RIL = ₹2,343.76, M&M = ₹824.21 -> Fair Value = ₹51,64,060", exam: "SMQ-7", pdfPg: "Pg 44–45", wbPg: "6.11–6.12" },
+  { id: "ch6-13", ch: "Ch6", chSeq: 13, priOrder: 80, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-12", title: "ABC Co. acquiring XYZ Ltd. — Valuation Range (Market Price vs DCF)", formula: "Min = Market Price ₹400 (₹600Cr); Max = 3-Yr DCF @ 12% ₹498.10 (₹747.15Cr)", exam: "Core Range Model", pdfPg: "Pg 45–46", wbPg: "6.12–6.13" },
+  { id: "ch6-14", ch: "Ch6", chSeq: 14, priOrder: 81, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-13", title: "Turtle Ltd. — Target Share Price via Trailing & Forward P/E", formula: "Trailing P/E = 2200/100 = 22x; Expected EPS1 = 100(1.12) = ₹112 -> Target Price = ₹2,464", exam: "SMQ-8", pdfPg: "Pg 46", wbPg: "6.13" },
+  { id: "ch6-15", ch: "Ch6", chSeq: 15, priOrder: 122, tier: "Tier 3", chName: "Ch 6: Valuation Methods", qno: "Q-13B", title: "A Ltd. & B Ltd. — Market Price, Market Cap & P/E Change Impact", formula: "MPS = EPS × P/E (A=₹18.75, B=₹6.25); If A's P/E drops to 7.5, MPS = ₹14.06 & Cap = ₹56.24L", exam: "Dec 23 Exam (7B)", pdfPg: "Pg 46–47", wbPg: "6.13–6.14" },
+  { id: "ch6-16", ch: "Ch6", chSeq: 16, priOrder: 82, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-14", title: "Toyota (July 2020) — Two-Stage Fundamental P/E Ratio Derivation", formula: "Stable Payout = 1 - 5%/15% = 66.67%; 2-Stage DDM P/E Formula = 15.86x", exam: "Fundamental P/E Sum", pdfPg: "Pg 47", wbPg: "6.14" },
+  { id: "ch6-17", ch: "Ch6", chSeq: 17, priOrder: 123, tier: "Tier 3", chName: "Ch 6: Valuation Methods", qno: "Q-15", title: "A Ltd. IPO Valuation — Peer Multiples (B, C, D Ltd.) with 1:2:1 Weights", formula: "Avg P/S=1.41, P/E=7.68, P/BV=2.83; Weighted Value = [282(1)+230.4(2)+283(1)]/4 = ₹256.45Cr", exam: "June 23 MQP, D19 MQP", pdfPg: "Pg 47–48", wbPg: "6.14–6.15" },
+  { id: "ch6-18", ch: "Ch6", chSeq: 18, priOrder: 29, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-16", title: "BSE Listed Firm — Enterprise Value (EV) with Irrelevant Data Traps", formula: "EV = Market Cap (10k × ₹140) + MV of Debt (₹4.5L) - Cash (₹40k) = ₹18,10,000", exam: "June 24 Exam (5A), MTP Dec 23", pdfPg: "Pg 48–49", wbPg: "6.15–6.16" },
+  { id: "ch6-19", ch: "Ch6", chSeq: 19, priOrder: 30, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-16B", title: "Infolink Ltd. & E-Link Ltd. — Comparable EV/EBITDA Multiple", formula: "Infolink EV = 60L+35L+15L-8L = 102L; EBITDA = 24.5L -> 4.16x; E-Link EV = 4.16 × 27L = ₹112.32L", exam: "Dec 24 MQP 1 (5B), SMQ-11", pdfPg: "Pg 49–50", wbPg: "6.16–6.17" },
+  { id: "ch6-20", ch: "Ch6", chSeq: 20, priOrder: 124, tier: "Tier 3", chName: "Ch 6: Valuation Methods", qno: "Q-17", title: "XYZ Pvt. Ltd. (Retail Angel Pitch) — Duplicate Print of Q-8", formula: "Same as Ch 6 Q-8 (EV = ₹300Cr, DCF = ₹289Cr)", exam: "Dec 23 MQP (5B)", pdfPg: "Pg 50–51", wbPg: "6.17–6.18" },
+  { id: "ch6-21", ch: "Ch6", chSeq: 21, priOrder: 31, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-18", title: "Sundar Televisions Ltd. — Comparable Firms Multiples (Alpha, Beta, Gamma)", formula: "Avg P/S=1.41, P/E=7.69, P/BV=2.83; Weighted (1:2:1) = [352.5+307.6(2)+283]/4 = ₹312.675Cr", exam: "Dec 24 Exam (5B)", pdfPg: "Pg 51", wbPg: "6.18" },
+  { id: "ch6-22", ch: "Ch6", chSeq: 22, priOrder: 32, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-19", title: "Companies A, B, C — Why Higher Leverage Lowers P/E Despite Same EV/EBIT", formula: "All have EV/EBIT = 6.67x; Co. A has lower P/E (6.35x vs 7.85x & 8.89x) due to 9% debt interest", exam: "Dec 23 Exam (6B)", pdfPg: "Pg 51–53", wbPg: "6.18–6.20" },
+  { id: "ch6-23", ch: "Ch6", chSeq: 23, priOrder: 33, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-20", title: "XY Ltd. (Retail Florist) — Reasonableness of ₹62L Asking Price via P/S & P/E", formula: "XY P/S = 0.756 (Top 22% quartile) & P/E = 7.38 (exceeds max sample P/E of 6.29)", exam: "Dec 23 Exam (8B)", pdfPg: "Pg 53–55", wbPg: "6.20–6.22" },
+  { id: "ch6-24", ch: "Ch6", chSeq: 24, priOrder: 83, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-21", title: "Monika & ChatApp (16M Users) — Comparable Transaction with 95% Size Discount", formula: "WhatsApp EV/User = $38.89 (₹2,527.78); Less 95% discount = ₹126.39 × 1.6Cr = ₹202.22Cr", exam: "Dec 23 (Variant), SMQ-12", pdfPg: "Pg 55", wbPg: "6.22" },
+  { id: "ch6-25", ch: "Ch6", chSeq: 25, priOrder: 84, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-22", title: "Blooming Ltd. & Gloomy Ltd. — Swap Ratios via BVPS, EPS & MPS", formula: "BVPS Swap = 22.29/29 = 0.7685; EPS Swap = 11/11.86 = 0.9277; MPS Swap = 40/45 = 0.8889", exam: "Dec 21, Dec 19 (12M)", pdfPg: "Pg 55–57", wbPg: "6.22–6.24" },
+  { id: "ch6-26", ch: "Ch6", chSeq: 26, priOrder: 85, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-23", title: "VG Pvt. Ltd. — Fair Value Net Asset Value (NAV) with RIL/Infosys Portfolio", formula: "Book Equity ₹634.51L + Inv Gain ₹100L + Land Appreciation ₹33.11L = ₹767.62L -> ₹290.32/sh", exam: "June 23 MQP, SMQ-13", pdfPg: "Pg 57–58", wbPg: "6.24–6.25" },
+  { id: "ch6-27", ch: "Ch6", chSeq: 27, priOrder: 34, tier: "Tier 1", chName: "Ch 6: Valuation Methods", qno: "Q-24", title: "Ratnakar Ltd. & JSB Ltd. — NAV, Earnings Cap & Weighted Fair Value Swap", formula: "NAV (285.71 & 48.46); Earnings Cap (1071.43 & 192.31); 1:3 Weighted FV (875 & 156.35) -> Swap 0.1787", exam: "Dec 24 MQP 1 (5A), Dec 23 MQP", pdfPg: "Pg 58–59", wbPg: "6.25–6.26" },
+  { id: "ch6-28", ch: "Ch6", chSeq: 28, priOrder: 86, tier: "Tier 2", chName: "Ch 6: Valuation Methods", qno: "Q-25", title: "Vipul Ventures Ltd. — Unlevered vs Levered Firm Valuation (25% Debt)", formula: "Unlevered VF = 338.40/0.1575 = ₹2,148.60L; Levered Ke=16.88%, WACC=14.23% -> VF = ₹2,378L", exam: "June 25 MQP 2 (5A), J19", pdfPg: "Pg 59–60", wbPg: "6.26–6.27" },
+
+  // ==================== CHAPTER 7: VALUATION OF ASSETS & LIABILITIES (47 SUMS | PDF PG 61-109) ====================
+  { id: "ch7-1", ch: "Ch7", chSeq: 1, priOrder: 87, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-1", title: "Equipment Purchased 6.5 Yrs Ago — Cost Indexing & Straight-Line Fair Value", formula: "Replacement Cost = 4,71,974 × (317/254) = ₹5,89,038; Less 50% life dep (5% scrap) = ₹3,09,245", exam: "Cost Approach Sum", pdfPg: "Pg 66 (dup 61)", wbPg: "7.1" },
+  { id: "ch7-2", ch: "Ch7", chSeq: 2, priOrder: 88, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-2", title: "Das Ltd. Machine — Value in Use & Recoverable Amount (Ind AS 36)", formula: "PV of 5-yr CFs (123.92L) + PV of Scrap (2.485L) = ₹126.405L > ₹55L NSP", exam: "Dec 18 Exam (8M)", pdfPg: "Pg 66–67 (dup 61)", wbPg: "7.1–7.2" },
+  { id: "ch7-3", ch: "Ch7", chSeq: 3, priOrder: 89, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-3", title: "31st March Inventory Valuation — Undervalued Opening Stock & Capital Wages", formula: "Op Stock = 58.5k/0.9 = 65k; Net Purch = 110k; Net Wages = 45k; GP = 50k -> Closing Stock = ₹70,000", exam: "June 23 Exam (10M)", pdfPg: "Pg 67–68 (dup 62)", wbPg: "7.2–7.3" },
+  { id: "ch7-4", ch: "Ch7", chSeq: 4, priOrder: 90, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-4", title: "X Ltd. Investment Portfolio — Current vs Long-Term Permanent Diminution", formula: "Current Inv (lower of cost/MV individually) = ₹510k; LT Inv (less ₹70k permanent fall in W) = ₹360k -> ₹870k", exam: "Dec 23 Exam (10M)", pdfPg: "Pg 68–69 (dup 63)", wbPg: "7.3–7.4" },
+  { id: "ch7-5", ch: "Ch7", chSeq: 5, priOrder: 35, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-5", title: "Carwin Tracom Ltd. (Rose Commodities) — Cost of Shares (Cum-Div & Bonus)", formula: "Purchase ₹60k + 2% brok - ₹4k pre-acq div = ₹57.2k; Less Avg Cost of 500 sold (₹13.3k) = ₹3,05,900", exam: "June 25 MQP 1 (6A), June 24 MQP 1 (6A)", pdfPg: "Pg 69–70 (dup 64)", wbPg: "7.4–7.5" },
+  { id: "ch7-6", ch: "Ch7", chSeq: 6, priOrder: 125, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-6", title: "JSB Estates — 3-Year Dividend + Terminal Selling Price Stock Valuation", formula: "PV of Div (3, 3.24, 3.50) + PV of ₹94.48 sale price @ 12% = ₹75", exam: "Basic DDM", pdfPg: "Pg 70", wbPg: "7.5" },
+  { id: "ch7-7", ch: "Ch7", chSeq: 7, priOrder: 91, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-7", title: "Asta Vinayak Ltd. — Valuation of 3,000 Shares via Dividend Yield (18%)", formula: "DPS = 12.50L / 50k = ₹25; Value/sh = 25 / 0.18 = ₹138.90 -> 3,000 sh = ₹4,16,667", exam: "Dec 22, Dec 17 (10M)", pdfPg: "Pg 70–71", wbPg: "7.5–7.6" },
+  { id: "ch7-8", ch: "Ch7", chSeq: 8, priOrder: 126, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-8", title: "Asta Durga Pvt. Ltd. (100 RIL Shares) — Closing Price vs 12-Day VWAP", formula: "Closing Price Value = ₹2,63,395; 12-Session VWAP Value = ₹2,52,093", exam: "VWAP Share Sum", pdfPg: "Pg 71", wbPg: "7.6" },
+  { id: "ch7-9", ch: "Ch7", chSeq: 9, priOrder: 36, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-9", title: "Panda Ltd. & AMGI Ltd. — Fair Value of Investment & 4-Year CAGR", formula: "Adj NAV = ₹40.35/sh; Panda Inv = 4L × 40.35 = ₹161.40L; CAGR = (161.4/48)^(1/4) - 1 = 35%", exam: "June 25 Exam (6A)", pdfPg: "Pg 71–72", wbPg: "7.6–7.7" },
+  { id: "ch7-10", ch: "Ch7", chSeq: 10, priOrder: 92, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-10", title: "Stock Valuation via Per-Share FCFE & CAPM Cost of Equity", formula: "FCFE0 = 3.15 - (0.37)(0.75) - 0.50(0.75) = ₹2.49; Ke = 11.9%; P0 = 2.49(1.06)/(0.119-0.06) = ₹44.74", exam: "Dec 23 MQP (10M)", pdfPg: "Pg 73", wbPg: "7.8" },
+  { id: "ch7-11", ch: "Ch7", chSeq: 11, priOrder: 37, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-11", title: "Rama & Company Ltd. — Equity Share Value via Earnings & P/E Multiple", formula: "EBIT ₹25L - Int ₹5L - Tax 25% = EAT ₹15L -> EPS ₹6 × 12.5 P/E = ₹75", exam: "June 25 MQP 2 (6A), D19", pdfPg: "Pg 73–74", wbPg: "7.8–7.9" },
+  { id: "ch7-12", ch: "Ch7", chSeq: 12, priOrder: 93, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-12", title: "Company A vs Company B — Small Lot (DPS Cap) vs Controlling Interest (EPS Cap)", formula: "Small lot: DPS/18% (A=₹13.33, B=₹11.56); Control: EPS/18% (A=₹16.67, B=₹14.44); Pref Coverage B=7.5x", exam: "D19 MTP (10M)", pdfPg: "Pg 74–75", wbPg: "7.9–7.10" },
+  { id: "ch7-13", ch: "Ch7", chSeq: 13, priOrder: 127, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-13", title: "25-Year Zero-Coupon Bond (₹1,00,000 Par) — Present Value @ 12%", formula: "Price = 1,00,000 / (1.12)^25 = ₹5,882 (approx ₹5,900)", exam: "Basic Bond Sum", pdfPg: "Pg 75–76", wbPg: "7.10–7.11" },
+  { id: "ch7-14", ch: "Ch7", chSeq: 14, priOrder: 94, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-14", title: "Semi-Annual Bond Valuation & Yield to Maturity (YTM) via Interpolation", formula: "12 half-yr periods @ 8% = ₹93.26; 4-yr 10% bond at ₹900 -> YTM interpolated between 13% & 14% = 13.39%", exam: "Dec 25 Exam (6B), Dec 22", pdfPg: "Pg 76", wbPg: "7.11" },
+  { id: "ch7-15", ch: "Ch7", chSeq: 15, priOrder: 95, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-15", title: "Mr. Khana ₹10,000 Obligation — Bond Duration & Interest Rate Immunization", formula: "Terminal value @ 8%, 6% & 10% is ~₹10,000 because Macauley Duration = 33,950/6,800 = 4.99 ≈ 5 yrs", exam: "Bond Immunization Sum", pdfPg: "Pg 77–78", wbPg: "7.12–7.13" },
+  { id: "ch7-16", ch: "Ch7", chSeq: 16, priOrder: 128, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-16", title: "14% Debenture (6-Yr, 2% Redemption Premium) — Annual Discounting @ 16%", formula: "PV of ₹14 coupon for 6 yrs + PV of ₹102 redemption @ 16% = ₹93.45", exam: "Annual Bond Variant", pdfPg: "Pg 78", wbPg: "7.13" },
+  { id: "ch7-17", ch: "Ch7", chSeq: 17, priOrder: 96, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-17", title: "12% Debentures Open-Market Buyback Decision after 2 Years", formula: "Yield rose to 15% -> Fair Price for remaining 3 yrs = ₹931.48 < ₹1,000 par -> Accept buyback", exam: "June 18 Exam (10M)", pdfPg: "Pg 78–79", wbPg: "7.13–7.14" },
+  { id: "ch7-18", ch: "Ch7", chSeq: 18, priOrder: 97, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-18", title: "Suvo Ltd. ₹24Cr Expansion — Valuation of Rights Issue & Shareholder Wealth", formula: "Rights 1:4; Value of Right = (345-250)/(4+1) = ₹19; Ex-Rights Price = ₹326", exam: "Dec 18 Exam", pdfPg: "Pg 79–80", wbPg: "7.14–7.15" },
+  { id: "ch7-19", ch: "Ch7", chSeq: 19, priOrder: 38, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-19", title: "Umang Ltd. — Warrant Minimum Price & Warrant Premium", formula: "At MPS ₹10: Min Price = 0, Premium = ₹3; At MPS ₹16.38: Min Price = ₹4.665, Premium = ₹5.085", exam: "Dec 24 Exam (6B), Dec 23 MQP 1 (5A)", pdfPg: "Pg 80–81", wbPg: "7.15–7.16" },
+  { id: "ch7-20", ch: "Ch7", chSeq: 20, priOrder: 39, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-20", title: "V. Goel ('Business Valuation' Book) — Copyrights Valuation (10-Yr DCF)", formula: "Base CF = 30% of ₹43.75L = ₹13.13L; Grows 5% (Yr 1-5) & 2% (Yr 6-10) disc @ 10% = ₹98.89L", exam: "Dec 25 Exam (6A), D25 MQP1&2, D24 MQP1", pdfPg: "Pg 81–82", wbPg: "7.16–7.17" },
+  { id: "ch7-21", ch: "Ch7", chSeq: 21, priOrder: 98, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-21", title: "Logos Ltd. — Brand Valuation via Relief-from-Royalty Method", formula: "Brand CF = 3% of (10% Royalty on Revenue) for 5 years discounted @ 12% = ₹258.47", exam: "Royalty Relief Model", pdfPg: "Pg 82", wbPg: "7.17" },
+  { id: "ch7-22", ch: "Ch7", chSeq: 22, priOrder: 99, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-22", title: "Branded vs Unbranded Product — Excess Returns Brand Valuation", formula: "Branded PAT (₹78,58,500) - Unbranded PAT (₹4,83,600) = ₹73,74,900 / 18% = ₹4,09,71,666", exam: "Dec 23 Exam (10M)", pdfPg: "Pg 82–83", wbPg: "7.17–7.18" },
+  { id: "ch7-23", ch: "Ch7", chSeq: 23, priOrder: 40, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-23", title: "PS Combines Ltd. — Brand Valuation with Inflation & Weighted Earnings", formula: "Adj PBIT (66, 78, 160) × Inflation (1.25, 1.15, 1.00) -> Weighted EBT 123.65 - 35% tax = 80.37 × 14 = ₹1,125.18L", exam: "Dec 23 MQP 1 (6A), J18", pdfPg: "Pg 83–84", wbPg: "7.18–7.19" },
+  { id: "ch7-24", ch: "Ch7", chSeq: 24, priOrder: 129, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-24", title: "Naturals Ltd. / Sanju Ltd. (Tyre Industry) — 10-Yr Market-Oriented Brand Valuation", formula: "Market size grows 5% (Yr 1-3) & 7% (Yr 4-10); Share drops 0.25%/yr from 16%; PV @ 15% = ₹1,094.80L", exam: "Advanced Brand Sum", pdfPg: "Pg 84–85", wbPg: "7.19–7.20" },
+  { id: "ch7-25", ch: "Ch7", chSeq: 25, priOrder: 100, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-25", title: "JDM Ltd. 7-Year Equipment Lease — Right of Use (ROU) Asset (Ind AS 116)", formula: "PV of ₹20,000 lease rental for 7 yrs @ 9% (₹1,00,640) + Initial Cost (₹50,000) = ₹1,50,640", exam: "SMQ-13", pdfPg: "Pg 86", wbPg: "7.1 (II)" },
+  { id: "ch7-26", ch: "Ch7", chSeq: 26, priOrder: 101, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-26", title: "ST Ltd. (3-Year Revalued B/S) — Super Profit Goodwill & Business Valuation", formula: "Avg Super Profit = ₹8,77,500 × 5 yrs = ₹43,87,500 Goodwill + ₹72,80,000 NAV = ₹1,16,67,500", exam: "June 23 Exam (10M), SMQ-11", pdfPg: "Pg 86–87", wbPg: "7.1–7.2 (II)" },
+  { id: "ch7-27", ch: "Ch7", chSeq: 27, priOrder: 41, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-27", title: "Shree Enclave Ltd. — Comprehensive Goodwill & Equity Share Valuation", formula: "FMP Equity = ₹2,35,000; Revised Equity Net Worth = ₹14,49,750; Goodwill (4x SP) = ₹2,44,120 -> ₹376.42/sh", exam: "June 25 Exam (5A), J23", pdfPg: "Pg 87–90", wbPg: "7.2–7.5 (II)" },
+  { id: "ch7-28", ch: "Ch7", chSeq: 28, priOrder: 130, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-28", title: "Mr. D (55-Yr-Old Employee) — 5-Year Salary Discounting HR Valuation", formula: "₹40L salary growing @ 8% p.a. for 5 years discounted @ 11% = ₹1,70,70,040", exam: "SMQ-14", pdfPg: "Pg 90", wbPg: "7.5 (II)" },
+  { id: "ch7-29", ch: "Ch7", chSeq: 29, priOrder: 102, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-29", title: "Executive Induction — Maximum Salary Payable & Maximum Bid Price", formula: "Max Salary = 37.5L + 7.5L - 33L = ₹12L p.a.; Max Bid Price = 12L / 12.5% = ₹96 Lakhs", exam: "J17, D17 (10M)", pdfPg: "Pg 90", wbPg: "7.5 (II)" },
+  { id: "ch7-30", ch: "Ch7", chSeq: 30, priOrder: 42, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-30", title: "Ranjan Ltd. — Human Resource Valuation across 3 Age Groups (30-59)", formula: "Incremental 10% Annuity Factors (6.145, 2.369, 0.913) across 3 age brackets = ₹59,90,60,000", exam: "June 24 Exam (6A)", pdfPg: "Pg 91–92", wbPg: "7.6–7.7 (II)" },
+  { id: "ch7-31", ch: "Ch7", chSeq: 31, priOrder: 43, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-31", title: "Skilled & Unskilled Employees — Lev & Schwartz (1971) HR Valuation", formula: "Skilled (3 yrs @ 20% = ₹2,10,648 × 25) + Unskilled (2 yrs @ 20% = ₹91,667 × 20) = ₹70,99,537", exam: "Dec 24 MQP 2 (6A)", pdfPg: "Pg 92", wbPg: "7.7 (II)" },
+  { id: "ch7-32", ch: "Ch7", chSeq: 32, priOrder: 131, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-32", title: "360 Employees (Unskilled, Semi-Skilled, Skilled) — 9-Cell Lev & Schwartz Matrix", formula: "3 Skill Groups × 3 Age Brackets @ 15% Annuity Factors = ₹10,43,73,900", exam: "J19 MTP (10M)", pdfPg: "Pg 92–94", wbPg: "7.7–7.9 (II)" },
+  { id: "ch7-33", ch: "Ch7", chSeq: 33, priOrder: 103, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-33", title: "Non-Trade Investments Adjustment — Operating Capital & EVA", formula: "Op EBIT = 2L + 60k - 10k = 2.5L -> NOPAT = 1.5L; Op Cap = 16L - 1L = 15L (ROOC 10% vs WACC 13%) -> EVA = -₹45,000", exam: "SMNP-20", pdfPg: "Pg 94–95", wbPg: "7.9–7.10 (II)" },
+  { id: "ch7-34", ch: "Ch7", chSeq: 34, priOrder: 132, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-34", title: "Gallant Ltd. — Operating Income, EVA & Max EVA Dividend Per Share", formula: "EBIT = 15L/0.7 + 10L = ₹31.43L; EVA = 22L - (13% × 95L) = ₹9.65L; Max Div/sh = 9.65L/6L = ₹1.608", exam: "Variant of Q-41", pdfPg: "Pg 95", wbPg: "7.10 (II)" },
+  { id: "ch7-35", ch: "Ch7", chSeq: 35, priOrder: 104, tier: "Tier 2", chName: "Ch 7: Assets & EVA", qno: "Q-35", title: "Udyog Limited — EVA Derivation using Financial Leverage (1.5x)", formula: "FL = PBIT/(PBIT-40) = 1.5 -> PBIT = ₹120L, NOPAT = ₹84L; WACC = 10% on ₹700L -> EVA = ₹14L", exam: "Core Leverage EVA", pdfPg: "Pg 95–96", wbPg: "7.10–7.11 (II)" },
+  { id: "ch7-36", ch: "Ch7", chSeq: 36, priOrder: 44, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-36", title: "M/s Henry Ltd. (2021 vs 2022) — Stern Stewart EVA & Shareholder Dissatisfaction", formula: "EVA Spread drops from 5.47% to 4.17% due to higher WACC (12.99% -> 14.34%); EVA drops ₹27.35L -> ₹26.35L", exam: "Dec 24 MQP 1 (6B), June 23 MQP", pdfPg: "Pg 96–97", wbPg: "7.11–7.12 (II)" },
+  { id: "ch7-37", ch: "Ch7", chSeq: 37, priOrder: 133, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-37", title: "A Ltd. (₹100Cr Assets in Place + HR Table) — Multi-Stage EVA Valuation", formula: "Cap Invested (100) + PV Existing EVA (50) + PV of 5 New Inv EVA (20.86) = ₹170.86Cr", exam: "Variant of Q-38", pdfPg: "Pg 97–98", wbPg: "7.12–7.13 (II)" },
+  { id: "ch7-38", ch: "Ch7", chSeq: 38, priOrder: 45, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-38", title: "Firm with ₹100Cr Assets in Place — Multi-Stage EVA Firm Valuation", formula: "100 + 50 + [5 + 4.55 + 4.13 + 3.76 + 3.42] = ₹170.86 Crore", exam: "June 24 Exam (6B), SMQ-16", pdfPg: "Pg 98–99", wbPg: "7.13–7.14 (II)" },
+  { id: "ch7-39", ch: "Ch7", chSeq: 39, priOrder: 46, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-39", title: "2023 Financial Extract — Direct EVA from PAT & Post-Tax Interest", formula: "NOPAT = 1541 + 5 = 1546; COCE = 2816 × 16.54% = 466; EVA = 1546 - 466 = ₹1,080 Lakhs", exam: "June 25 MQP 1 (6B), June 24 MQP 1 (6B)", pdfPg: "Pg 99", wbPg: "7.14 (II)" },
+  { id: "ch7-40", ch: "Ch7", chSeq: 40, priOrder: 47, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-40", title: "Sandeep Ltd. — EVA with CAPM Cost of Equity & Effective Tax Rate (24.45%)", formula: "NOPAT = 20,762.09L; Ke = 15.30%, Kd = 4.54%, WACC = 14.22%; COCE = 11,518.20L -> EVA = ₹9,207.89L", exam: "Dec 24 MQP 2 (6B), MQP J24", pdfPg: "Pg 99–100", wbPg: "7.14–7.15 (II)" },
+  { id: "ch7-41", ch: "Ch7", chSeq: 41, priOrder: 48, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-41", title: "Desai Ltd. — Operating Income, EVA & Maximum EVA Dividend Per Share", formula: "EBIT = 15L/0.6 + 15L = ₹40L; EVA = 24L - 12.6L = ₹11.40L; Max Div/Share = 11.40L/2.5L = ₹4.56", exam: "June 24 MQP 1 (5B)", pdfPg: "Pg 100–101", wbPg: "7.15–7.16 (II)" },
+  { id: "ch7-42", ch: "Ch7", chSeq: 42, priOrder: 49, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-42", title: "Orange, Red & Blue Co. — Capital Structure Impact on WACC, EVA & Market Cap", formula: "WACC: Orange 13.52%, Red 15.225%, Blue 17.95%; EVA: Orange +2,730 (Best), Red +1,025, Blue -1,700", exam: "June 25 MQP 1 (5B), J19", pdfPg: "Pg 101–102", wbPg: "7.16–7.17 (II)" },
+  { id: "ch7-43", ch: "Ch7", chSeq: 43, priOrder: 50, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-43", title: "Nebula Ltd. — EVA from Summarized P&L and Balance Sheet", formula: "NOPAT = 2,86,000(0.6) = 1,71,600; Op Cap = 6,40,000 (ROOC 26.81%); WACC = 10.88% -> EVA = ₹1,01,952", exam: "June 25 Exam (6B), June 25 MQP 2, Dec 23 MQP", pdfPg: "Pg 102–104", wbPg: "7.17–7.19 (II)" },
+  { id: "ch7-44", ch: "Ch7", chSeq: 44, priOrder: 134, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-44", title: "BCCA Limited (Annual Report 2022–23) — EVA Excluding Non-Operating Items", formula: "Op EBIT = 481 + 9 - 250 = 240Cr -> NOPAT = 168Cr; Op Cap = 490 - 75 = 415Cr -> EVA = ₹105.74Cr", exam: "June 25 WB, D19", pdfPg: "Pg 104–105", wbPg: "7.19–7.20 (II)" },
+  { id: "ch7-45", ch: "Ch7", chSeq: 45, priOrder: 51, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-45", title: "Radeon Company Ltd. — Combined EVA and Market Value Added (MVA)", formula: "EVA = 2380 - (10.36% × 1500) = ₹2,224.6L; MVA = Market Cap (50L × ₹136.5 = 6825L) - Net Worth (850L) = ₹5,975L", exam: "Dec 25 MQP 1 (6B)", pdfPg: "Pg 105–107", wbPg: "7.20–7.22 (II)" },
+  { id: "ch7-46", ch: "Ch7", chSeq: 46, priOrder: 135, tier: "Tier 3", chName: "Ch 7: Assets & EVA", qno: "Q-46", title: "Residential Property Neighbourhood Sales — Gross Rent Multiplier (GRM)", formula: "Avg GRM of 5 sales = 18.95x; Value = ₹6,00,000 × 18.95 = ₹1,13,70,768", exam: "SMQ-15", pdfPg: "Pg 107", wbPg: "7.22 (II)" },
+  { id: "ch7-47", ch: "Ch7", chSeq: 47, priOrder: 52, tier: "Tier 1", chName: "Ch 7: Assets & EVA", qno: "Q-47", title: "Bandra Office Building (3 Lakh sq.ft) — Real Estate Comparable Valuation", formula: "(i) Effective Area (3L × 94% = 2.82L) × ₹50.03 = ₹1,41,31,061; (ii) Gross Rent ₹150L × 0.406 = ₹6,09,00,000", exam: "Dec 23 Exam (6A)", pdfPg: "Pg 107–109", wbPg: "7.22–7.24 (II)" },
+
+  // ==================== CHAPTER 8: VALUATION IN MERGERS & ACQUISITIONS (33 SUMS | PDF PG 110-186) ====================
+  { id: "ch8-1", ch: "Ch8", chSeq: 1, priOrder: 53, tier: "Tier 1", chName: "Ch 8: M&A Valuation", qno: "Q-1", title: "Highland & Lowland Co. — Complete 8-Step Stock-for-Stock Merger Model", formula: "Premium=1.5x, ER=1.8, New Sh=36k, Post-EPS=₹2.21, Pre-EPS=₹2.27, P/E=22x, Post-MPS=₹48.60, Ownership=24.66%:75.34%", exam: "Dec 24 Exam (8B), D25 MQP1, D24 MQP2", pdfPg: "Pg 110–111 (dup 156)", wbPg: "8.1–8.2" },
+  { id: "ch8-2", ch: "Ch8", chSeq: 2, priOrder: 105, tier: "Tier 2", chName: "Ch 8: M&A Valuation", qno: "Q-2", title: "Ware Ltd. & Minda Ltd. — Cost of Acquisition & 6-Year NPV Feasibility", formula: "Cost = Shares(4.5L) + Deb(2L) + Net Cash(1L) = ₹7.5L; PV of 6-yr inflows @ 14% = ₹12.122L -> NPV = +₹4,62,200", exam: "Core M&A NPV Sum", pdfPg: "Pg 111–112 (dup 159)", wbPg: "8.2–8.3" },
+  { id: "ch8-3", ch: "Ch8", chSeq: 3, priOrder: 106, tier: "Tier 2", chName: "Ch 8: M&A Valuation", qno: "Q-3", title: "Ace Ltd. & Base Ltd. — Cash vs Stock vs Mixed Offer Synergy Apportionment", formula: "Synergy ₹110M: Option 1 Cash (Acquirer +40M, Target +70M); Option 2 Stock (+36M, +74M); Option 3 Mix (+32.8M, +77.2M)", exam: "June 23 Exam", pdfPg: "Pg 112–114 (dup 157)", wbPg: "8.3–8.5" },
+  { id: "ch8-4", ch: "Ch8", chSeq: 4, priOrder: 54, tier: "Tier 1", chName: "Ch 8: M&A Valuation", qno: "Q-4", title: "Aruna & Mani Ltd. — Fair Acquisition Deal Price via Peer P/E & Deal Premiums", formula: "Intrinsic Value = EPS ₹15 × Peer Avg P/E (16x) = ₹240; Deal Price = ₹240 × (1 + 25% Avg Premium) = ₹300", exam: "June 24 Exam (7B)", pdfPg: "Pg 114–115 (dup 161)", wbPg: "8.5–8.6" },
+  { id: "ch8-5", ch: "Ch8", chSeq: 5, priOrder: 55, tier: "Tier 1", chName: "Ch 8: M&A Valuation", qno: "Q-5", title: "ABC Ltd. — Present Value of Growth Opportunities (Negative PVGO Takeover Target)", formula: "g = 10%×0.6 = 6%; P = 4/(0.15-0.06) = ₹44.44; No-growth P = 10/0.15 = ₹66.66 -> PVGO = -₹22.22", exam: "Dec 25 MQP 2, June 25 MQP 1, June 24 MQP 1", pdfPg: "Pg 115–116 (dup 160)", wbPg: "8.6–8.7" },
+  { id: "ch8-6", ch: "Ch8", chSeq: 6, priOrder: 56, tier: "Tier 1", chName: "Ch 8: M&A Valuation", qno: "Q-6", title: "RAJJAN & REKHA Corp. — Pre-Merger vs Post-Merger Value with COGS Synergy", formula: "Pre-Merger = 31.8L + 25.92L = ₹57.72L; Post-Merger (COGS 65%, WACC 11%, g 7%) = ₹67.41L (Synergy ₹9.63L)", exam: "June 25 Exam (7A), Dec 24 MQP 1, Dec 23 MQP", pdfPg: "Pg 116–117 (dup 162)", wbPg: "8.7–8.8" },
+  { id: "ch8-7", ch: "Ch8", chSeq: 7, priOrder: 136, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-7", title: "Pure Drugs & Solid Drugs Ltd. — 3 Swap Proposals (EPS, MPS & 3:5 Ratio)", formula: "Post-EPS & MPS (P/E=25x): Alt I EPS-basis (₹12, ₹300); Alt II MPS-basis (₹11.06, ₹276.50); Alt III 3:5 (₹11.43, ₹285.71)", exam: "Dec 23 MQP 1, J18", pdfPg: "Pg 117–118 (dup 150)", wbPg: "8.8–8.9" },
+  { id: "ch8-8", ch: "Ch8", chSeq: 8, priOrder: 137, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-8", title: "Vikas Ltd. & Nikas Ltd. — 3 Acquisition Plans (Cash, Mixed & Stock Swap)", formula: "Plan 1 Cash (EPS ₹2.20, MPS ₹27.50 - Best); Plan 2 Mix (EPS ₹2.146, MPS ₹26.83); Plan 3 Swap (EPS ₹2.095, MPS ₹26.19)", exam: "June 25 MQP 1 (8B)", pdfPg: "Pg 118–119 (dup 150)", wbPg: "8.9–8.10" },
+  { id: "ch8-9", ch: "Ch8", chSeq: 9, priOrder: 138, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-9", title: "Cement Firms X & Y — Combined Value, Cost of Cash Merger & Shareholder NPV", formula: "Combined PV = 200+50+25 = ₹275L; Cost to X (NPV to Y) = 65-50 = ₹15L; NPV to X = 25-15 = ₹10L", exam: "June 19 Exam", pdfPg: "Pg 119–120 (dup 152)", wbPg: "8.10–8.11" },
+  { id: "ch8-10", ch: "Ch8", chSeq: 10, priOrder: 57, tier: "Tier 1", chName: "Ch 8: M&A Valuation", qno: "Q-9A", title: "Sandy Co. & Vindi Co. — Perpetual Synergy Gain vs Cost of Cash & Stock Offers", formula: "Gain = 50k/0.10 = ₹5L; Cash Cost = 14L - 10L = ₹4L; 50% Stock Cost = 0.5(35L) - 10L = ₹7.5L", exam: "Dec 24 Exam (7A)", pdfPg: "Pg 120–121", wbPg: "8.11–8.12" },
+  { id: "ch8-11", ch: "Ch8", chSeq: 11, priOrder: 139, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-9B", title: "Preetam Ltd. & Soham & Co. — Valuation Range (Market Price vs 3-Yr DCF)", formula: "Min = Market Price ₹440; Max = DCF Value ₹1,415.86Cr / 3.10Cr sh = ₹456.73 per share", exam: "June 25 Exam (7B)", pdfPg: "Pg 121–122", wbPg: "8.12–8.13" },
+  { id: "ch8-12", ch: "Ch8", chSeq: 12, priOrder: 58, tier: "Tier 1", chName: "Ch 8: M&A Valuation", qno: "Q-10", title: "Tarun, Arun & Barun Ltd. — 2-Target P/E Based Merger Accretion/Dilution", formula: "Tarun + Arun (P/E 37>30) dilutes EPS ₹2->₹1.93 (Reject); Tarun + Barun (P/E 23<30) accretes EPS ₹2->₹2.08 (Accept)", exam: "Dec 24 Exam (7B), June 25 MQP 1", pdfPg: "Pg 122–124 (dup 153)", wbPg: "8.13–8.15" },
+  { id: "ch8-13", ch: "Ch8", chSeq: 13, priOrder: 140, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-11", title: "Raghav Ltd. & Sourav Ltd. — MPS Swap Post-EPS vs Zero-Dilution EPS Swap", formula: "Pre-EPS: R=₹5, S=₹3; MPS Swap (14/21=2/3) -> Post-EPS = ₹4.86; Same-Earnings Swap (3/5=0.6) -> Post-EPS = ₹5.00", exam: "Dec 25 MQP 1, Dec 24 MQP 2, June 25 MQP 2", pdfPg: "Pg 124–125 (dup 154)", wbPg: "8.15–8.16" },
+  { id: "ch8-14", ch: "Ch8", chSeq: 14, priOrder: 141, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-12", title: "XYZ Ltd. & ABC Ltd. — P/E Revision Swap & Exchange Ratio for Unchanged EPS", formula: "At ABC P/E=8: MPS=₹8, ER=0.32, Post-EPS=₹2.16; For Unchanged EPS (₹2.00): ER = EPS_ABC/EPS_XYZ = 1/2 = 0.50", exam: "Dec 25 MQP 1 (8B), June 24 MQP 1", pdfPg: "Pg 125–126 (dup 164)", wbPg: "8.16–8.17" },
+  { id: "ch8-15", ch: "Ch8", chSeq: 15, priOrder: 107, tier: "Tier 2", chName: "Ch 8: M&A Valuation", qno: "Q-13", title: "B Co. Ltd. & A Co. Ltd. — Zero-NPV Post-Merger P/E & Implied Synergy", formula: "Post-EPS = ₹5.132; Zero-NPV Post P/E = 79.40/5.132 = 15.47x; Synergy = Cost (15.88L) - MV (15L) = ₹88,000", exam: "June 25 MQP 2 (7B), SMNQ-17", pdfPg: "Pg 126–127 (dup 165)", wbPg: "8.17–8.18" },
+  { id: "ch8-16", ch: "Ch8", chSeq: 16, priOrder: 142, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-14", title: "Q Ltd. & R Ltd. (1:2 Swap) — Post-EPS, Equivalent EPS, MPS & Market Value", formula: "New sh = 90k; Post-EPS = ₹3.13; Equiv EPS (R) = ₹1.57; Post-MPS = ₹31.30; Merged MV = ₹2,15,97,000", exam: "Dec 24 MQP 2 (7A)", pdfPg: "Pg 127–128 (dup 166)", wbPg: "8.18–8.19" },
+  { id: "ch8-17", ch: "Ch8", chSeq: 17, priOrder: 143, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-15", title: "Radha Ltd. & Krishna Ltd. — Pre-Merger EPS & EPS-Based Exchange Ratio", formula: "EPS(Radha) = 20L/6L = ₹3.33; EPS(Krishna) = 10L/2L = ₹5.00; Exchange Ratio = 5 / 3.33 = 1.50", exam: "Dec 23 Exam (7A)", pdfPg: "Pg 128 (dup 167)", wbPg: "8.19" },
+  { id: "ch8-18", ch: "Ch8", chSeq: 18, priOrder: 144, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-15A", title: "Mohit Co. & Neeraj Co. — MPS Swap Post-EPS vs Non-Diminishing EPS Swap", formula: "MPS Swap (160/200=0.8) -> Post-EPS = ₹5.42; Non-Diminishing EPS Swap (6/5=1.20) -> Post-EPS = ₹5.00", exam: "Core EPS Protection Sum", pdfPg: "Pg 128–129 (dup 167)", wbPg: "8.19–8.20" },
+  { id: "ch8-19", ch: "Ch8", chSeq: 19, priOrder: 145, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-16", title: "A Ltd. & B Ltd. — MPS, Market Cap, P/E Contraction & Revised Exchange Ratio", formula: "Same as Ch 6 Q-13B plus part (v): Revised Exchange Ratio = 6.25 / 14.0625 = 0.44", exam: "June 25 MQP 2 (7A), D23, D17", pdfPg: "Pg 129–130 (dup 168)", wbPg: "8.20–8.21" },
+  { id: "ch8-20", ch: "Ch8", chSeq: 20, priOrder: 146, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-17", title: "Abhishek, Bikash & Chitra Ltd. — Identical Numbers to Q-10 (Tarun/Arun/Barun)", formula: "Post-EPS with Bikash = ₹1.93 (Lower); Post-EPS with Chitra = ₹2.08 (Higher -> Recommend Chitra)", exam: "Variant of Q-10", pdfPg: "Pg 130–131 (dup 169)", wbPg: "8.21–8.22" },
+  { id: "ch8-21", ch: "Ch8", chSeq: 21, priOrder: 147, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-18", title: "Deepika Ltd. (P/E 17) & Alia Ltd. (P/E 10) — Bootstrap EPS Accretion", formula: "Pre-EPS Deepika = 12/17 = ₹0.706; New sh = 10L(15/12) = 12.5L; Post-EPS = 50.3L/62.5L = ₹0.8048 (+₹0.0988)", exam: "June 23, June 19 Exam", pdfPg: "Pg 131 (dup 170)", wbPg: "8.22" },
+  { id: "ch8-22", ch: "Ch8", chSeq: 22, priOrder: 148, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-18B", title: "Company X & Company Y — Relative EPS Swap vs 0.5:1 Swap EPS Impact", formula: "Alt (a) Relative EPS (2.25/4): Post-EPS = ₹4 (No impact); Alt (b) 0.5:1 Swap: Post-EPS = ₹4.125 (X +0.125, Y -0.1875)", exam: "June 24 Exam (8B), Dec 24 MQP 1", pdfPg: "Pg 131–132 (dup 170)", wbPg: "8.22–8.23" },
+  { id: "ch8-23", ch: "Ch8", chSeq: 23, priOrder: 149, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-19", title: "Sun Ltd. & Moon Ltd. — Swap Ratio, 10% P/E Drop & Shareholder Gain/Loss", formula: "Swap = 20/100 = 0.2; Post-EPS = ₹15; New P/E = 9x -> Post-MPS = ₹135; Total Gain ₹14,000L (+7,000L each)", exam: "Dec 24 MQP 1 (7B), D23, J17", pdfPg: "Pg 133–134 (dup 172)", wbPg: "8.24–8.25" },
+  { id: "ch8-24", ch: "Ch8", chSeq: 24, priOrder: 59, tier: "Tier 1", chName: "Ch 8: M&A Valuation", qno: "Q-19B", title: "Xenos Ltd. & Yogita Ltd. — Weighted Swap (40:25:35), Promoter % & Free Float Cap", formula: "Weighted Swap = 2.5:1; Post-EPS = ₹6.96; Post-MPS = ₹69.60; Promoter % = 60%; Free Float Cap = ₹800 Lakhs", exam: "Dec 23 Exam (8A)", pdfPg: "Pg 134–136 (dup 173)", wbPg: "8.25–8.27" },
+  { id: "ch8-25", ch: "Ch8", chSeq: 25, priOrder: 108, tier: "Tier 2", chName: "Ch 8: M&A Valuation", qno: "Q-20", title: "Hypothetical Ltd. & Target Ltd. — Post-Merger Debt Ratio & Borrowing Capacity", formula: "Merged Capital = ₹130L, Debt = ₹50L (38.46% < 50% -> Risk Declined); Additional Debt for 50% = ₹30 Lakhs", exam: "June 24 Exam (7A)", pdfPg: "Pg 136 (dup 175)", wbPg: "8.27" },
+  { id: "ch8-26", ch: "Ch8", chSeq: 26, priOrder: 60, tier: "Tier 1", chName: "Ch 8: M&A Valuation", qno: "Q-21", title: "Pinnacle Venture & Best Systems — PE Ownership %, Post-Money & Pre-Money Value", formula: "Req FV = 4000(1.4)^5 = 21,513M; Yr 5 Eq = 28,600M -> Share = 75.23%; Post-Money = ₹5,318M, Pre-Money = ₹1,318M", exam: "Dec 24 Exam (6A)", pdfPg: "Pg 136–138 (dup 175)", wbPg: "8.27–8.29" },
+  { id: "ch8-27", ch: "Ch8", chSeq: 27, priOrder: 150, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-22", title: "Reliable (RIL) & Sunflower (SIL) — 1:4 Swap Value & 20% Synergy Impact", formula: "No Synergy: Post-EPS ₹2.40, MPS ₹24 (RIL +40L, SIL +10L); With 20% Synergy: EPS ₹2.88, MPS ₹28.80", exam: "Dec 25 Exam (7A), D25 MQP1, J24 MQP1", pdfPg: "Pg 138–139 (dup 177)", wbPg: "8.29–8.30" },
+  { id: "ch8-28", ch: "Ch8", chSeq: 28, priOrder: 151, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-23", title: "X Ltd. & Y Ltd. — Identical Numbers to Q-22 (RIL & SIL)", formula: "Same as Q-22 (No Synergy MPS = ₹24; With 20% Synergy MPS = ₹28.80)", exam: "June 17 Exam", pdfPg: "Pg 139–140 (dup 178)", wbPg: "8.30–8.31" },
+  { id: "ch8-29", ch: "Ch8", chSeq: 29, priOrder: 152, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-24", title: "Hard Co. (HCL) & Soft Co. (SCL) — 1:4 Swap & 20% Synergy with P/E Expansion (15x)", formula: "Pre-MPS: HCL ₹96, SCL ₹27; No Synergy: EPS ₹6.94, MPS ₹99.17; With 20% Synergy & 15x P/E: EPS ₹8.32, MPS ₹124.80", exam: "Dec 18 Exam", pdfPg: "Pg 140–142 (dup 179)", wbPg: "8.31–8.33" },
+  { id: "ch8-30", ch: "Ch8", chSeq: 30, priOrder: 153, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-25", title: "ST Ltd. & BE Ltd. — 7x EBIDAT Less Debt Offer vs 1:2 Market Price Swap", formula: "ST Offer: Net Cons ₹569.97L, Sh=2.59L, EPS=₹20.56, MPS=₹226.16; BE Plan: Net Cons ₹660L, Sh=3L, EPS=₹20, MPS=₹220", exam: "Dec 19 Exam", pdfPg: "Pg 142–143 (dup 181)", wbPg: "8.33–8.34" },
+  { id: "ch8-31", ch: "Ch8", chSeq: 31, priOrder: 154, tier: "Tier 3", chName: "Ch 8: M&A Valuation", qno: "Q-26", title: "Vodafone Ltd. & Idea Ltd. — 3 Share Issuance Schemes (20k, 25k & 30k Shares)", formula: "Combined Value ₹35L: At 20k sh (Idea gets ₹10L, zero gain); At 25k sh (Idea ₹11.67L, Voda ₹23.33L); At 30k sh (Idea ₹13.125L)", exam: "June 18 Exam", pdfPg: "Pg 143–144 (dup 182)", wbPg: "8.34–8.35" },
+  { id: "ch8-32", ch: "Ch8", chSeq: 32, priOrder: 109, tier: "Tier 2", chName: "Ch 8: M&A Valuation", qno: "Q-27", title: "AB Ltd. & VZ Ltd. — Maximum Acceptable Swap (Acquirer) & Minimum Swap (Target)", formula: "Max ER for AB (P/E=12, 0% synergy) = 0.80; Min ER for VZ (P/E=11, 5% synergy) = 0.65735", exam: "Dec 19 Exam (8M)", pdfPg: "Pg 144–145 (dup 183)", wbPg: "8.35–8.36" },
+  { id: "ch8-33", ch: "Ch8", chSeq: 33, priOrder: 61, tier: "Tier 1", chName: "Ch 8: M&A Valuation", qno: "Q-28 (dup Q-29)", title: "Fortune India & Fortune Pharmacy Ltd. — Corporate Demerger Valuation", formula: "Net Worth split 21k : 24k; Pharma issues 1,500L sh (Ratio 1:2); FMCG Expected MPS = ₹159.60; BVPS: Pharma ₹14, FMCG ₹8", exam: "June 25 Exam (8B), Dec 25 MQP 2", pdfPg: "Pg 145–147 (dup 184)", wbPg: "8.36–8.38" }
+];
+
+let currentFilter = 'all';
+let currentSort = 'chapter';
+let completedIds = JSON.parse(localStorage.getItem('spmbv_ch_completed_v3') || '[]');
+
+function saveProgress() {
+  localStorage.setItem('spmbv_ch_completed_v3', JSON.stringify(completedIds));
+  updateStats();
+}
+
+function toggleSum(id) {
+  const idx = completedIds.indexOf(id);
+  if (idx > -1) {
+    completedIds.splice(idx, 1);
+  } else {
+    completedIds.push(id);
+  }
+  saveProgress();
+  renderTable();
+}
+
+function toggleTheory() {
+  document.getElementById('theory-panel').classList.toggle('show');
+}
+
+function setSort(mode) {
+  currentSort = mode;
+  document.getElementById('sort-ch-btn').classList.toggle('active', mode === 'chapter');
+  document.getElementById('sort-pri-btn').classList.toggle('active', mode === 'priority');
+  renderTable();
+}
+
+function setFilter(filter, btnEl) {
+  currentFilter = filter;
+  document.querySelectorAll('#view-filters .btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  renderTable();
+}
+
+function setFilterByCard(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('#view-filters .btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-filter') === filter);
+  });
+  renderTable();
+}
+
+function exportProgress() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(completedIds));
+  const dlAnchor = document.createElement('a');
+  dlAnchor.setAttribute("href", dataStr);
+  dlAnchor.setAttribute("download", "spmbv_progress_backup.json");
+  document.body.appendChild(dlAnchor);
+  dlAnchor.click();
+  dlAnchor.remove();
+}
+
+function importProgress() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = event => {
+      try {
+        const imported = JSON.parse(event.target.result);
+        if (Array.isArray(imported)) {
+          completedIds = imported;
+          saveProgress();
+          renderTable();
+          alert("Progress restored successfully!");
+        }
+      } catch (err) {
+        alert("Invalid backup file.");
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function resetProgress() {
+  if (confirm("Reset all completed checkboxes?")) {
+    completedIds = [];
+    saveProgress();
+    renderTable();
+  }
+}
+
+function updateStats() {
+  const total = sumsData.length;
+  const done = completedIds.length;
+  const pct = Math.round((done / total) * 100);
+
+  const countCh = (chCode) => {
+    const tot = sumsData.filter(s => s.ch === chCode).length;
+    const dn = sumsData.filter(s => s.ch === chCode && completedIds.includes(s.id)).length;
+    return `${dn} / ${tot}`;
+  };
+
+  document.getElementById('stat-total').textContent = `${done} / ${total}`;
+  document.getElementById('stat-pct').textContent = `${pct}%`;
+  document.getElementById('stat-ch2').textContent = countCh('Ch2');
+  document.getElementById('stat-ch3').textContent = countCh('Ch3');
+  document.getElementById('stat-ch4').textContent = countCh('Ch4');
+  document.getElementById('stat-ch6').textContent = countCh('Ch6');
+  document.getElementById('stat-ch7').textContent = countCh('Ch7');
+  document.getElementById('stat-ch8').textContent = countCh('Ch8');
+  document.getElementById('progress-fill').style.width = `${pct}%`;
+}
+
+function renderTable() {
+  const query = document.getElementById('search-box').value.toLowerCase();
+  const tbody = document.getElementById('sums-tbody');
+  tbody.innerHTML = '';
+
+  let filtered = sumsData.filter(item => {
+    const isDone = completedIds.includes(item.id);
+    const matchesFilter =
+      currentFilter === 'all' ||
+      item.tier === currentFilter ||
+      item.ch === currentFilter ||
+      (currentFilter === 'pending' && !isDone);
+    const matchesSearch =
+      item.title.toLowerCase().includes(query) ||
+      item.formula.toLowerCase().includes(query) ||
+      item.qno.toLowerCase().includes(query) ||
+      item.chName.toLowerCase().includes(query) ||
+      item.pdfPg.toLowerCase().includes(query) ||
+      item.exam.toLowerCase().includes(query);
+    return matchesFilter && matchesSearch;
+  });
+
+  document.getElementById('visible-count-badge').textContent = `${filtered.length} Sums Shown`;
+
+  if (currentSort === 'priority') {
+    filtered.sort((a, b) => a.priOrder - b.priOrder);
+  } else {
+    const chOrder = { Ch2: 1, Ch3: 2, Ch4: 3, Ch6: 4, Ch7: 5, Ch8: 6 };
+    filtered.sort((a, b) => (chOrder[a.ch] - chOrder[b.ch]) || (a.chSeq - b.chSeq));
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No matching sums found. Try clearing the search box or switching filters.</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(item => {
+    const isDone = completedIds.includes(item.id);
+    const tr = document.createElement('tr');
+    if (isDone) tr.classList.add('completed-row');
+
+    const tierClass = item.tier === 'Tier 1' ? 'p-tier1' : (item.tier === 'Tier 2' ? 'p-tier2' : 'p-tier3');
+    const tierLabel = item.tier === 'Tier 1' ? '🔥 Do 1st (Exam/MQP)' : (item.tier === 'Tier 2' ? '⚡ Do 2nd (Core)' : '💎 Do 3rd (Mastery)');
+
+    tr.innerHTML = `
+      <td><input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleSum('${item.id}')"></td>
+      <td>
+        <span class="order-badge">${currentSort === 'chapter' ? item.ch + ' #' + item.chSeq : 'Pri #' + item.priOrder}</span>
+      </td>
+      <td>
+        <strong style="color:#fff; display:block;">${item.chName}</strong>
+        <span style="color:var(--accent); font-weight:700; font-size:0.84rem;">${item.qno}</span>
+      </td>
+      <td><span class="priority-pill ${tierClass}">${tierLabel}</span></td>
+      <td class="title-cell">
+        <strong style="font-size:0.93rem;">${item.title}</strong>
+        <span class="formula-hint">📐 <em>${item.formula}</em></span>
+        <span class="exam-tag">🎯 ${item.exam}</span>
+      </td>
+      <td><span class="pg-badge">${item.pdfPg}</span></td>
+      <td><span style="color:var(--text-muted); font-family:monospace; font-size:0.82rem;">WB ${item.wbPg}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+updateStats();
+renderTable();
+</script>
+</body>
+</html>
